@@ -1,6 +1,6 @@
 package com.anush.trendingrepositories.repository;
 
-import com.anush.trendingrepositories.data.RemoteDataSource;
+import com.anush.trendingrepositories.data.remote.RemoteDataSource;
 
 public class DataRepositoryImpl implements DataRepository {
 

@@ -1,7 +1,8 @@
 package com.anush.trendingrepositories.di;
 
-import com.anush.trendingrepositories.data.RemoteDataSource;
-import com.anush.trendingrepositories.data.RemoteDataSourceImpl;
+import com.anush.trendingrepositories.data.remote.RemoteDataSource;
+import com.anush.trendingrepositories.data.remote.RemoteDataSourceImpl;
+import com.anush.trendingrepositories.data.remote.TrendingRepositoriesApi;
 import com.anush.trendingrepositories.repository.DataRepository;
 import com.anush.trendingrepositories.repository.DataRepositoryImpl;
 
@@ -18,8 +19,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    RemoteDataSource provideRemoteDataSource() {
-        return new RemoteDataSourceImpl();
+    RemoteDataSource provideRemoteDataSource(TrendingRepositoriesApi trendingRepositoriesApi) {
+        return new RemoteDataSourceImpl(trendingRepositoriesApi);
     }
 
     @Provides
