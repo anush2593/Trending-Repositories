@@ -1,9 +1,14 @@
-package com.anush.trendingrepositories;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.anush.trendingrepositories.ui;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.anush.trendingrepositories.R;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     @Override
