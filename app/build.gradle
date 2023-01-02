@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.anush.trendingrepositories"
-        minSdk 21
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -53,7 +53,15 @@ dependencies {
     def retrofit_version = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
+
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
+
+    def rxjava_version = "3.1.5"
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava_version"
+
+    def rxandroid_version = "3.0.2"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxandroid_version"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

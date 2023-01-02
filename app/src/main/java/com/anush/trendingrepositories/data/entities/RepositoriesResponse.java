@@ -15,7 +15,7 @@ public class RepositoriesResponse {
     private Boolean incompleteResults;
     @SerializedName("items")
     @Expose
-    private List<ItemEntity> items = null;
+    private List<RepositoryEntity> items = null;
 
     public Integer getTotalCount() {
         return totalCount;
@@ -33,11 +33,11 @@ public class RepositoriesResponse {
         this.incompleteResults = incompleteResults;
     }
 
-    public List<ItemEntity> getItems() {
+    public List<RepositoryEntity> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemEntity> items) {
+    public void setItems(List<RepositoryEntity> items) {
         this.items = items;
     }
 

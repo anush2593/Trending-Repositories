@@ -6,6 +6,13 @@ public class Repository {
     private Owner owner;
     private Integer starsCount;
 
+    public Repository(String name, String description, Owner owner, Integer starsCount) {
+        this.name = name;
+        this.description = description;
+        this.owner = owner;
+        this.starsCount = starsCount;
+    }
+
     public String getName() {
         return name;
     }

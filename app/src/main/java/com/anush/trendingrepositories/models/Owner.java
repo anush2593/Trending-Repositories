@@ -4,6 +4,11 @@ public class Owner {
     private String username;
     private String avatarUrl;
 
+    public Owner(String username, String avatarUrl) {
+        this.username = username;
+        this.avatarUrl = avatarUrl;
+    }
+
     public String getUsername() {
         return username;
     }
