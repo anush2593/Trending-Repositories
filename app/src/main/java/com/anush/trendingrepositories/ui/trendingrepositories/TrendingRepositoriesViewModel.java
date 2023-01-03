@@ -20,21 +20,34 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class TrendingRepositoriesViewModel extends ViewModel {
 
     private final MutableLiveData<List<Repository>> trendingRepositoriesMutableLiveData = new MutableLiveData<>();
-    public LiveData<List<Repository>> trendingRepositoriesLiveData = trendingRepositoriesMutableLiveData;
+    public final LiveData<List<Repository>> trendingRepositoriesLiveData = trendingRepositoriesMutableLiveData;
+
+    private final MutableLiveData<Boolean> loadingMutableLiveData = new MutableLiveData<>();
+    public final LiveData<Boolean> loadingLiveData = loadingMutableLiveData;
+
+    private final MutableLiveData<Boolean> noDataMutableLiveData = new MutableLiveData<>();
+    public final LiveData<Boolean> noDataLiveData = noDataMutableLiveData;
+
+    private final MutableLiveData<String> errorMessageMutableLiveData = new MutableLiveData<>();
+    public final LiveData<String> errorMessageLiveData = errorMessageMutableLiveData;
 
     @Inject
     public TrendingRepositoriesViewModel(DataRepository repository) {
         repository.getTrendingRepositoriesByMinDate(DateHelper.getDateOneDayAgo())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(x -> {
-                    //TODO show error message
-                })
-                .doOnSuccess(trendingRepositories -> {
-                    //TODO disable loading indicator, handle empty list case
-                    setTrendingRepositoriesMutableLiveData(trendingRepositories);
-                })
-                .subscribe();
+                .subscribe(trendingRepositories -> {
+                    setLoadingMutableLiveData(false);
+                    if (trendingRepositories.isEmpty()) {
+                        setNoDataMutableLiveData(true);
+                    } else {
+                        setNoDataMutableLiveData(false);
+                        setTrendingRepositoriesMutableLiveData(trendingRepositories);
+                    }
+                }, throwable -> {
+                    setLoadingMutableLiveData(false);
+                    setErrorMessageMutableLiveData(throwable.getMessage());
+                });
     }
 
 
@@ -50,4 +63,39 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         return trendingRepositoriesLiveData;
     }
 
+    private MutableLiveData<Boolean> getLoadingMutableLiveData() {
+        return loadingMutableLiveData;
+    }
+
+    private void setLoadingMutableLiveData(Boolean loadingMutableLiveData) {
+        this.loadingMutableLiveData.setValue(loadingMutableLiveData);
+    }
+
+    public LiveData<Boolean> getLoadingLiveData() {
+        return loadingLiveData;
+    }
+
+    private MutableLiveData<Boolean> getNoDataMutableLiveData() {
+        return noDataMutableLiveData;
+    }
+
+    private void setNoDataMutableLiveData(Boolean noDataMutableLiveData) {
+        this.noDataMutableLiveData.setValue(noDataMutableLiveData);
+    }
+
+    public LiveData<Boolean> getNoDataLiveData() {
+        return noDataLiveData;
+    }
+
+    private MutableLiveData<String> getErrorMessageMutableLiveData() {
+        return errorMessageMutableLiveData;
+    }
+
+    private void setErrorMessageMutableLiveData(String errorMessageMutableLiveData) {
+        this.errorMessageMutableLiveData.setValue(errorMessageMutableLiveData);
+    }
+
+    public LiveData<String> getErrorMessageLiveData() {
+        return errorMessageLiveData;
+    }
 }

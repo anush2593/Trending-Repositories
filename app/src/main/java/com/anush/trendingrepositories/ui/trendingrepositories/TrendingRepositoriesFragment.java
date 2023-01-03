@@ -54,6 +54,31 @@ public class TrendingRepositoriesFragment extends Fragment {
         trendingRepositoriesViewModel.getTrendingRepositoriesLiveData().observe(getViewLifecycleOwner(), repositories -> {
             trendingRepositoriesAdapter.submitList(repositories);
         });
+
+        trendingRepositoriesViewModel.getLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+            } else {
+                binding.progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        trendingRepositoriesViewModel.getNoDataLiveData().observe(getViewLifecycleOwner(), isNoData -> {
+            if (isNoData) {
+                binding.tvNoData.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvNoData.setVisibility(View.GONE);
+            }
+        });
+
+        trendingRepositoriesViewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null) {
+                binding.tvErrorMessage.setVisibility(View.VISIBLE);
+                binding.tvErrorMessage.setText(String.format("Error: %s", errorMessage));
+            } else {
+                binding.tvErrorMessage.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void setupTrendingRepositoriesRecyclerView() {
