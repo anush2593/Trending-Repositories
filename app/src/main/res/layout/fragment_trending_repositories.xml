@@ -22,24 +22,22 @@
         android:id="@+id/spinner_timeframe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:entries="@array/array_timeframe"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_timeframe"
         app:layout_constraintStart_toEndOf="@+id/tv_timeframe"
-        app:layout_constraintTop_toTopOf="@+id/tv_timeframe" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/tv_timeframe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:text="@string/timeframe"
         android:textColor="@color/black"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_timeframe"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="@+id/spinner_timeframe" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_trending_repositories"
@@ -53,5 +51,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_timeframe"
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_repository" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_timeframe" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

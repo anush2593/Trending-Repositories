@@ -23,7 +23,7 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
 
     @Override
     public Single<RepositoriesResponse> getTrendingRepositoriesByMinDate(Date date) {
-        final String q = "created:>" + dateToString(date);
+        final String q = "created:>=" + dateToString(date);
         return trendingRepositoriesApi.getRepositories(q);
     }
 

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.anush.trendingrepositories.databinding.FragmentTrendingRepositoriesBinding;
 
@@ -20,6 +21,9 @@ public class TrendingRepositoriesFragment extends Fragment {
     private FragmentTrendingRepositoriesBinding binding;
 
     private TrendingRepositoriesViewModel trendingRepositoriesViewModel;
+
+    private TrendingRepositoriesAdapter trendingRepositoriesAdapter;
+
 
     public TrendingRepositoriesFragment() {
     }
@@ -41,7 +45,21 @@ public class TrendingRepositoriesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupTrendingRepositoriesRecyclerView();
         initViewModel();
+        addObservers();
+    }
+
+    private void addObservers() {
+        trendingRepositoriesViewModel.getTrendingRepositoriesLiveData().observe(getViewLifecycleOwner(), repositories -> {
+            trendingRepositoriesAdapter.submitList(repositories);
+        });
+    }
+
+    private void setupTrendingRepositoriesRecyclerView() {
+        trendingRepositoriesAdapter = new TrendingRepositoriesAdapter();
+        binding.rvTrendingRepositories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        binding.rvTrendingRepositories.setAdapter(trendingRepositoriesAdapter);
     }
 
     private void initViewModel() {

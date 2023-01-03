@@ -20,7 +20,7 @@ public class RepositoryMapper {
         return entityList.stream().map(this::mapToRepository).collect(Collectors.toList());
     }
     public Repository mapToRepository(RepositoryEntity entity) {
-        return new Repository(entity.getName(), entity.getDescription(), mapToOwner(entity.getOwner()), entity.getStargazersCount());
+        return new Repository(entity.getId(), entity.getName(), entity.getDescription(), mapToOwner(entity.getOwner()), entity.getStargazersCount());
     }
 
     public Owner mapToOwner(OwnerEntity entity) {
