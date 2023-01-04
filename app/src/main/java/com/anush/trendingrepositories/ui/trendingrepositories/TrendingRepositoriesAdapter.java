@@ -12,6 +12,7 @@ import com.anush.trendingrepositories.R;
 import com.anush.trendingrepositories.databinding.ItemRepositoryBinding;
 import com.anush.trendingrepositories.models.Repository;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class TrendingRepositoriesAdapter extends ListAdapter<Repository, TrendingRepositoriesAdapter.ViewHolder> {
     protected TrendingRepositoriesAdapter() {
@@ -36,6 +37,7 @@ public class TrendingRepositoriesAdapter extends ListAdapter<Repository, Trendin
         holder.binding.tvStarCount.setText(String.valueOf(repository.getStarsCount()));
         Glide.with(holder.binding.ivAvatar.getContext())
                 .load(repository.getOwner().getAvatarUrl())
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .placeholder(R.drawable.ic_no_image)
                 .into(holder.binding.ivAvatar);
     }
