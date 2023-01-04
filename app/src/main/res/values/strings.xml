@@ -3,6 +3,7 @@
     <string name="timeframe">Timeframe:</string>
     <string name="star">star</string>
     <string name="no_data">No Data</string>
+    <string name="refresh">refresh</string>
     <string-array name="array_timeframe">
         <item>Last day</item>
         <item>Last week</item>

@@ -1,11 +1,15 @@
 package com.anush.trendingrepositories.di;
 
+import android.content.Context;
+
+import com.anush.trendingrepositories.data.remote.InternetConnectionInterceptor;
 import com.anush.trendingrepositories.data.remote.TrendingRepositoriesApi;
 import com.anush.trendingrepositories.data.remote.TrendingRepositoriesInterceptor;
 
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -22,9 +26,17 @@ public class NetworkModule {
     }
 
     @Provides
-    OkHttpClient provideOkHttpClient(TrendingRepositoriesInterceptor trendingRepositoriesInterceptor) {
+    InternetConnectionInterceptor provideConnectivityInterceptor(@ApplicationContext Context context) {
+        return new InternetConnectionInterceptor(context);
+    }
+
+
+    @Provides
+    OkHttpClient provideOkHttpClient(TrendingRepositoriesInterceptor trendingRepositoriesInterceptor,
+                                     InternetConnectionInterceptor internetConnectionInterceptor) {
         return new OkHttpClient().newBuilder()
                 .addInterceptor(trendingRepositoriesInterceptor)
+                .addInterceptor(internetConnectionInterceptor)
                 .build();
     }
 

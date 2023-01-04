@@ -63,6 +63,10 @@ public class TrendingRepositoriesFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        binding.ivRefresh.setOnClickListener(v -> {
+            trendingRepositoriesViewModel.getTrendingRepositoriesByMinDate(binding.spinnerTimeframe.getSelectedItemPosition());
+        });
     }
 
     private void addObservers() {
@@ -86,11 +90,21 @@ public class TrendingRepositoriesFragment extends Fragment {
             }
         });
 
+        trendingRepositoriesViewModel.getRefreshLiveData().observe(getViewLifecycleOwner(), refresh -> {
+            if (refresh) {
+                binding.ivRefresh.setVisibility(View.VISIBLE);
+            } else {
+                binding.ivRefresh.setVisibility(View.GONE);
+            }
+        });
+
         trendingRepositoriesViewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
+                binding.rvTrendingRepositories.setVisibility(View.GONE);
                 binding.tvErrorMessage.setVisibility(View.VISIBLE);
                 binding.tvErrorMessage.setText(String.format("Error: %s", errorMessage));
             } else {
+                binding.rvTrendingRepositories.setVisibility(View.VISIBLE);
                 binding.tvErrorMessage.setVisibility(View.GONE);
             }
         });

@@ -37,6 +37,9 @@ public class TrendingRepositoriesViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessageMutableLiveData = new MutableLiveData<>();
     public final LiveData<String> errorMessageLiveData = errorMessageMutableLiveData;
 
+    private final MutableLiveData<Boolean> refreshMutableLiveData = new MutableLiveData<>();
+    public final LiveData<Boolean> refreshLiveData = refreshMutableLiveData;
+
     @Inject
     public TrendingRepositoriesViewModel(DataRepository repository) {
         this.repository = repository;
@@ -44,6 +47,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
 
     public void getTrendingRepositoriesByMinDate(int i) {
         setLoadingMutableLiveData(true);
+        setRefreshMutableLiveData(false);
 
         Date minDate = null;
         switch (i) {
@@ -64,6 +68,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(trendingRepositories -> {
                     setLoadingMutableLiveData(false);
+                    setErrorMessageMutableLiveData(null);
                     if (trendingRepositories.isEmpty()) {
                         setNoDataMutableLiveData(true);
                     } else {
@@ -72,6 +77,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
                     }
                 }, throwable -> {
                     setLoadingMutableLiveData(false);
+                    setRefreshMutableLiveData(true);
                     setErrorMessageMutableLiveData(throwable.getMessage());
                 });
     }
@@ -123,5 +129,17 @@ public class TrendingRepositoriesViewModel extends ViewModel {
 
     public LiveData<String> getErrorMessageLiveData() {
         return errorMessageLiveData;
+    }
+
+    public MutableLiveData<Boolean> getRefreshMutableLiveData() {
+        return refreshMutableLiveData;
+    }
+
+    public void setRefreshMutableLiveData(Boolean refreshMutableLiveData) {
+        this.refreshMutableLiveData.setValue(refreshMutableLiveData);
+    }
+
+    public LiveData<Boolean> getRefreshLiveData() {
+        return refreshLiveData;
     }
 }
