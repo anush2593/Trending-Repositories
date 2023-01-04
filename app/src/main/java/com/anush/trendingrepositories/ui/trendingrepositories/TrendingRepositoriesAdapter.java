@@ -4,8 +4,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anush.trendingrepositories.R;
@@ -14,7 +14,7 @@ import com.anush.trendingrepositories.models.Repository;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-public class TrendingRepositoriesAdapter extends ListAdapter<Repository, TrendingRepositoriesAdapter.ViewHolder> {
+public class TrendingRepositoriesAdapter extends PagingDataAdapter<Repository, TrendingRepositoriesAdapter.ViewHolder> {
     protected TrendingRepositoriesAdapter() {
         super(DIFF_CALLBACK);
     }
@@ -40,11 +40,6 @@ public class TrendingRepositoriesAdapter extends ListAdapter<Repository, Trendin
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .placeholder(R.drawable.ic_no_image)
                 .into(holder.binding.ivAvatar);
-    }
-
-    @Override
-    public int getItemCount() {
-        return getCurrentList().size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

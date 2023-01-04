@@ -1,13 +1,14 @@
 package com.anush.trendingrepositories.repository;
 
+import androidx.paging.PagingData;
+
 import com.anush.trendingrepositories.RepositoryMapper;
 import com.anush.trendingrepositories.data.remote.RemoteDataSource;
 import com.anush.trendingrepositories.models.Repository;
 
 import java.util.Date;
-import java.util.List;
 
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class DataRepositoryImpl implements DataRepository {
 
@@ -20,8 +21,11 @@ public class DataRepositoryImpl implements DataRepository {
     }
 
     @Override
-    public Single<List<Repository>> getTrendingRepositoriesByMinDate(Date date) {
-       return mRemoteDataSource.getTrendingRepositoriesByMinDate(date)
-               .map(result -> mRepositoryMapper.mapToRepositoryList(result.getItems()));
+    public Flowable<PagingData<Repository>> getTrendingRepositoriesByMinDate(Date date) {
+
+
+        return mRemoteDataSource.getTrendingRepositoriesByMinDate(date);
+//       return mRemoteDataSource.getTrendingRepositoriesByMinDate(date)
+//               .map(result -> mRepositoryMapper.mapToRepositoryList(result.getItems()));
     }
 }

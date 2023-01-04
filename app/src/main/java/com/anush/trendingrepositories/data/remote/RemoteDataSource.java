@@ -1,14 +1,16 @@
 package com.anush.trendingrepositories.data.remote;
 
 
-import com.anush.trendingrepositories.data.entities.RepositoriesResponse;
+import androidx.paging.PagingData;
+
+import com.anush.trendingrepositories.models.Repository;
 
 import java.util.Date;
 
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Flowable;
 
 public interface RemoteDataSource {
 
-    Single<RepositoriesResponse> getTrendingRepositoriesByMinDate(Date date);
+    Flowable<PagingData<Repository>> getTrendingRepositoriesByMinDate(Date date);
 
 }

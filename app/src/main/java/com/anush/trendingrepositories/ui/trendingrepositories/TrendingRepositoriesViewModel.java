@@ -3,6 +3,9 @@ package com.anush.trendingrepositories.ui.trendingrepositories;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelKt;
+import androidx.paging.PagingData;
+import androidx.paging.rxjava3.PagingRx;
 
 import com.anush.trendingrepositories.helpers.DateHelper;
 import com.anush.trendingrepositories.models.Repository;
@@ -14,8 +17,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import kotlinx.coroutines.CoroutineScope;
 
 @HiltViewModel
 public class TrendingRepositoriesViewModel extends ViewModel {
@@ -45,6 +48,56 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         this.repository = repository;
     }
 
+
+    public Flowable<PagingData<Repository>> getTrendingRepositoriesByMinDate2(int i) {
+        setLoadingMutableLiveData(true);
+        setRefreshMutableLiveData(false);
+
+        Date minDate = null;
+        switch (i) {
+            case LAST_DAY:
+                minDate = DateHelper.getDateOneDayAgo();
+                break;
+            case LAST_WEEK:
+                minDate = DateHelper.getDateWeekAgo();
+                break;
+            case LAST_MONTH:
+                minDate = DateHelper.getDateMonthAgo();
+                break;
+        }
+
+        CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
+        Flowable<PagingData<Repository>> repositoryFlowable = repository.getTrendingRepositoriesByMinDate(minDate);
+        PagingRx.cachedIn(repositoryFlowable, viewModelScope);
+
+
+//        repository.getTrendingRepositoriesByMinDate(DateHelper.getDateWeekAgo()).map(x -> x.ge)
+
+
+//                repositoryFlowable
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(trendingRepositories -> {
+//                    setLoadingMutableLiveData(false);
+//                    setErrorMessageMutableLiveData(null);
+//                    if (trendingRepositories.isEmpty()) {
+//                        setNoDataMutableLiveData(true);
+//                    } else {
+//                        setNoDataMutableLiveData(false);
+//                        setTrendingRepositoriesMutableLiveData(trendingRepositories);
+//                    }
+//                }, throwable -> {
+//                    setLoadingMutableLiveData(false);
+//                    setRefreshMutableLiveData(true);
+//                    setErrorMessageMutableLiveData(throwable.getMessage());
+//                });
+
+
+
+        return repositoryFlowable;
+    }
+
+
     public void getTrendingRepositoriesByMinDate(int i) {
         setLoadingMutableLiveData(true);
         setRefreshMutableLiveData(false);
@@ -63,23 +116,23 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         }
 
 
-        repository.getTrendingRepositoriesByMinDate(minDate)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(trendingRepositories -> {
-                    setLoadingMutableLiveData(false);
-                    setErrorMessageMutableLiveData(null);
-                    if (trendingRepositories.isEmpty()) {
-                        setNoDataMutableLiveData(true);
-                    } else {
-                        setNoDataMutableLiveData(false);
-                        setTrendingRepositoriesMutableLiveData(trendingRepositories);
-                    }
-                }, throwable -> {
-                    setLoadingMutableLiveData(false);
-                    setRefreshMutableLiveData(true);
-                    setErrorMessageMutableLiveData(throwable.getMessage());
-                });
+//        repository.getTrendingRepositoriesByMinDate(minDate)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(trendingRepositories -> {
+//                    setLoadingMutableLiveData(false);
+//                    setErrorMessageMutableLiveData(null);
+//                    if (trendingRepositories.isEmpty()) {
+//                        setNoDataMutableLiveData(true);
+//                    } else {
+//                        setNoDataMutableLiveData(false);
+//                        setTrendingRepositoriesMutableLiveData(trendingRepositories);
+//                    }
+//                }, throwable -> {
+//                    setLoadingMutableLiveData(false);
+//                    setRefreshMutableLiveData(true);
+//                    setErrorMessageMutableLiveData(throwable.getMessage());
+//                });
     }
 
 
@@ -99,7 +152,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         return loadingMutableLiveData;
     }
 
-    private void setLoadingMutableLiveData(Boolean loadingMutableLiveData) {
+    public void setLoadingMutableLiveData(Boolean loadingMutableLiveData) {
         this.loadingMutableLiveData.setValue(loadingMutableLiveData);
     }
 
@@ -111,7 +164,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         return noDataMutableLiveData;
     }
 
-    private void setNoDataMutableLiveData(Boolean noDataMutableLiveData) {
+    public void setNoDataMutableLiveData(Boolean noDataMutableLiveData) {
         this.noDataMutableLiveData.setValue(noDataMutableLiveData);
     }
 
