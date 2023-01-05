@@ -1,18 +1,22 @@
 package com.anush.trendingrepositories.data.remote;
 
 
-import androidx.annotation.NonNull;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.rxjava3.PagingRx;
 
-import com.anush.trendingrepositories.data.entities.RepositoriesResponse;
+import com.anush.trendingrepositories.helpers.DateHelper;
+import com.anush.trendingrepositories.models.Repository;
+import com.anush.trendingrepositories.data.pagination.TrendingRepositoriesPagingSource;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class RemoteDataSourceImpl implements RemoteDataSource {
+    public static final int NETWORK_PAGE_SIZE = 30;
+
 
     TrendingRepositoriesApi trendingRepositoriesApi;
 
@@ -22,14 +26,10 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
     }
 
     @Override
-    public Single<RepositoriesResponse> getTrendingRepositoriesByMinDate(Date date) {
-        final String q = "created:>=" + dateToString(date);
-        return trendingRepositoriesApi.getRepositories(q);
-    }
+    public Flowable<PagingData<Repository>> getTrendingRepositoriesByMinDate(Date date) {
+        final String q = "created:>=" + DateHelper.dateToString(date);
 
-    @NonNull
-    private String dateToString(Date date) {
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        return dateFormat.format(date);
+        Pager<Integer, Repository> pager = new Pager<>(new PagingConfig(NETWORK_PAGE_SIZE), () -> new TrendingRepositoriesPagingSource(trendingRepositoriesApi, q));
+        return PagingRx.getFlowable(pager);
     }
 }

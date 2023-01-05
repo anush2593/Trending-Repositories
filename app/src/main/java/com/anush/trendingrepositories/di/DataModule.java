@@ -1,6 +1,5 @@
 package com.anush.trendingrepositories.di;
 
-import com.anush.trendingrepositories.RepositoryMapper;
 import com.anush.trendingrepositories.data.remote.RemoteDataSource;
 import com.anush.trendingrepositories.data.remote.RemoteDataSourceImpl;
 import com.anush.trendingrepositories.data.remote.TrendingRepositoriesApi;
@@ -18,16 +17,16 @@ import dagger.hilt.components.SingletonComponent;
 @InstallIn(SingletonComponent.class)
 public class DataModule {
 
-    @Provides
     @Singleton
+    @Provides
     RemoteDataSource provideRemoteDataSource(TrendingRepositoriesApi trendingRepositoriesApi) {
         return new RemoteDataSourceImpl(trendingRepositoriesApi);
     }
 
-    @Provides
     @Singleton
-    DataRepository provideDataRepository(RemoteDataSource remoteDataSource, RepositoryMapper repositoryMapper) {
-        return new DataRepositoryImpl(remoteDataSource, repositoryMapper);
+    @Provides
+    DataRepository provideDataRepository(RemoteDataSource remoteDataSource) {
+        return new DataRepositoryImpl(remoteDataSource);
     }
 
 }

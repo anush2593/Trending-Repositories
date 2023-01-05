@@ -9,5 +9,5 @@ import retrofit2.http.Query;
 public interface TrendingRepositoriesApi {
 
     @GET("search/repositories?sort=stars&order=desc")
-    Single<RepositoriesResponse> getRepositories(@Query("q") String minDate);
+    Single<RepositoriesResponse> getRepositories(@Query("q") String minDate, @Query("page") Integer page);
 }
