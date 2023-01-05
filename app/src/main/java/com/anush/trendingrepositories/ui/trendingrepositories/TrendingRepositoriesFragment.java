@@ -56,30 +56,14 @@ public class TrendingRepositoriesFragment extends Fragment {
         initViewModel();
         addObservers();
         initViewListeners();
-
-
-        trendingRepositoriesAdapter.addLoadStateListener(combinedLoadStates -> {
-
-            if (combinedLoadStates.getRefresh() instanceof LoadState.Error) {
-                LoadState.Error loadStateError = (LoadState.Error) combinedLoadStates.getRefresh();
-                if (loadStateError.getError() instanceof NoInternetConnectionException) {
-                    trendingRepositoriesViewModel.setNoDataMutableLiveData(true);
-                }
-            }
-            if (combinedLoadStates.getRefresh() instanceof LoadState.NotLoading) {
-                trendingRepositoriesViewModel.setLoadingMutableLiveData(false);
-            }
-            return null;
-        });
-
     }
 
     private void initViewListeners() {
         binding.spinnerTimeframe.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                trendingRepositoriesViewModel.getTrendingRepositoriesByMinDate(position);
-                trendingRepositoriesViewModel.getTrendingRepositoriesByMinDate2(position)
+                binding.rvTrendingRepositories.scrollToPosition(0);
+                trendingRepositoriesViewModel.getTrendingRepositoriesByMinDate(position)
                         .to(autoDisposable(AndroidLifecycleScopeProvider.from(requireActivity())))
                         .subscribe(pagingData -> trendingRepositoriesAdapter.submitData(getLifecycle(), pagingData));
             }
@@ -90,13 +74,25 @@ public class TrendingRepositoriesFragment extends Fragment {
         });
 
         binding.ivRefresh.setOnClickListener(v -> {
-            trendingRepositoriesViewModel.getTrendingRepositoriesByMinDate(binding.spinnerTimeframe.getSelectedItemPosition());
+            trendingRepositoriesAdapter.refresh();
         });
     }
 
     private void addObservers() {
-        trendingRepositoriesViewModel.getTrendingRepositoriesLiveData().observe(getViewLifecycleOwner(), repositories -> {
-//            trendingRepositoriesAdapter.submitList(repositories);
+        trendingRepositoriesAdapter.addLoadStateListener(combinedLoadStates -> {
+            trendingRepositoriesViewModel.setLoadingMutableLiveData(combinedLoadStates.getRefresh() instanceof LoadState.Loading);
+
+            if (combinedLoadStates.getRefresh() instanceof LoadState.Error) {
+                LoadState.Error loadStateError = (LoadState.Error) combinedLoadStates.getRefresh();
+                if (loadStateError.getError() instanceof NoInternetConnectionException) {
+                    trendingRepositoriesViewModel.setErrorMessageMutableLiveData(loadStateError.getError().getLocalizedMessage());
+                    trendingRepositoriesViewModel.setRefreshMutableLiveData(true);
+                }
+            } else {
+                trendingRepositoriesViewModel.setErrorMessageMutableLiveData(null);
+                trendingRepositoriesViewModel.setRefreshMutableLiveData(false);
+            }
+            return null;
         });
 
         trendingRepositoriesViewModel.getLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
@@ -138,7 +134,7 @@ public class TrendingRepositoriesFragment extends Fragment {
     private void setupTrendingRepositoriesRecyclerView() {
         trendingRepositoriesAdapter = new TrendingRepositoriesAdapter();
         ConcatAdapter trendingRepositoriesAdapterWithFooter = trendingRepositoriesAdapter.withLoadStateFooter(new TrendingRepositoriesLoadStateAdapter(v -> {
-            trendingRepositoriesViewModel.getTrendingRepositoriesByMinDate2(binding.spinnerTimeframe.getSelectedItemPosition());
+            trendingRepositoriesAdapter.retry();
         }));
         binding.rvTrendingRepositories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         binding.rvTrendingRepositories.setAdapter(trendingRepositoriesAdapterWithFooter);

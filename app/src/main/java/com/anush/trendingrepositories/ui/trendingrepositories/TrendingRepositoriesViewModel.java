@@ -49,10 +49,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
     }
 
 
-    public Flowable<PagingData<Repository>> getTrendingRepositoriesByMinDate2(int i) {
-        setLoadingMutableLiveData(true);
-        setRefreshMutableLiveData(false);
-
+    public Flowable<PagingData<Repository>> getTrendingRepositoriesByMinDate(int i) {
         Date minDate = null;
         switch (i) {
             case LAST_DAY:
@@ -70,69 +67,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         Flowable<PagingData<Repository>> repositoryFlowable = repository.getTrendingRepositoriesByMinDate(minDate);
         PagingRx.cachedIn(repositoryFlowable, viewModelScope);
 
-
-//        repository.getTrendingRepositoriesByMinDate(DateHelper.getDateWeekAgo()).map(x -> x.ge)
-
-
-//                repositoryFlowable
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(trendingRepositories -> {
-//                    setLoadingMutableLiveData(false);
-//                    setErrorMessageMutableLiveData(null);
-//                    if (trendingRepositories.isEmpty()) {
-//                        setNoDataMutableLiveData(true);
-//                    } else {
-//                        setNoDataMutableLiveData(false);
-//                        setTrendingRepositoriesMutableLiveData(trendingRepositories);
-//                    }
-//                }, throwable -> {
-//                    setLoadingMutableLiveData(false);
-//                    setRefreshMutableLiveData(true);
-//                    setErrorMessageMutableLiveData(throwable.getMessage());
-//                });
-
-
-
         return repositoryFlowable;
-    }
-
-
-    public void getTrendingRepositoriesByMinDate(int i) {
-        setLoadingMutableLiveData(true);
-        setRefreshMutableLiveData(false);
-
-        Date minDate = null;
-        switch (i) {
-            case LAST_DAY:
-                minDate = DateHelper.getDateOneDayAgo();
-                break;
-            case LAST_WEEK:
-                minDate = DateHelper.getDateWeekAgo();
-                break;
-            case LAST_MONTH:
-                minDate = DateHelper.getDateMonthAgo();
-                break;
-        }
-
-
-//        repository.getTrendingRepositoriesByMinDate(minDate)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(trendingRepositories -> {
-//                    setLoadingMutableLiveData(false);
-//                    setErrorMessageMutableLiveData(null);
-//                    if (trendingRepositories.isEmpty()) {
-//                        setNoDataMutableLiveData(true);
-//                    } else {
-//                        setNoDataMutableLiveData(false);
-//                        setTrendingRepositoriesMutableLiveData(trendingRepositories);
-//                    }
-//                }, throwable -> {
-//                    setLoadingMutableLiveData(false);
-//                    setRefreshMutableLiveData(true);
-//                    setErrorMessageMutableLiveData(throwable.getMessage());
-//                });
     }
 
 
@@ -176,7 +111,7 @@ public class TrendingRepositoriesViewModel extends ViewModel {
         return errorMessageMutableLiveData;
     }
 
-    private void setErrorMessageMutableLiveData(String errorMessageMutableLiveData) {
+    public void setErrorMessageMutableLiveData(String errorMessageMutableLiveData) {
         this.errorMessageMutableLiveData.setValue(errorMessageMutableLiveData);
     }
 

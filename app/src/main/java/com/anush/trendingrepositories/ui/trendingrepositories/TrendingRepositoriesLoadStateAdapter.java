@@ -18,7 +18,7 @@ import com.anush.trendingrepositories.databinding.ItemLoadStateBinding;
 import org.jetbrains.annotations.NotNull;
 
 class TrendingRepositoriesLoadStateAdapter extends LoadStateAdapter<TrendingRepositoriesLoadStateAdapter.LoadStateViewHolder> {
-    private View.OnClickListener mRetryCallback;
+    private final View.OnClickListener mRetryCallback;
 
     TrendingRepositoriesLoadStateAdapter(View.OnClickListener retryCallback) {
         mRetryCallback = retryCallback;
@@ -27,12 +27,12 @@ class TrendingRepositoriesLoadStateAdapter extends LoadStateAdapter<TrendingRepo
     @NotNull
     @Override
     public LoadStateViewHolder onCreateViewHolder(@NotNull ViewGroup parent, @NotNull LoadState loadState) {
-        return new LoadStateViewHolder(parent, mRetryCallback);
+        return new LoadStateViewHolder(parent);
     }
 
     @Override
     public void onBindViewHolder(@NotNull LoadStateViewHolder holder, @NotNull LoadState loadState) {
-        holder.bind(loadState);
+        holder.bind(loadState, mRetryCallback);
     }
 
 
@@ -41,26 +41,24 @@ class TrendingRepositoriesLoadStateAdapter extends LoadStateAdapter<TrendingRepo
         private TextView mErrorMsg;
         private ImageView mRetry;
 
-        LoadStateViewHolder(@NonNull ViewGroup parent, @NonNull View.OnClickListener retryCallback) {
+        LoadStateViewHolder(@NonNull ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_load_state, parent, false));
-
             ItemLoadStateBinding binding = ItemLoadStateBinding.bind(itemView);
+
             mProgressBar = binding.progressBarItem;
             mErrorMsg = binding.tvErrorItem;
             mRetry = binding.ivRefreshItem;
         }
 
-        public void bind(LoadState loadState) {
+        public void bind(LoadState loadState, @NonNull View.OnClickListener retryCallback) {
             if (loadState instanceof LoadState.Error) {
                 LoadState.Error loadStateError = (LoadState.Error) loadState;
                 mErrorMsg.setText(loadStateError.getError().getLocalizedMessage());
             }
-            mProgressBar.setVisibility(loadState instanceof LoadState.Loading
-                    ? View.VISIBLE : View.GONE);
-            mRetry.setVisibility(loadState instanceof LoadState.Error
-                    ? View.VISIBLE : View.GONE);
-            mErrorMsg.setVisibility(loadState instanceof LoadState.Error
-                    ? View.VISIBLE : View.GONE);
+            mProgressBar.setVisibility(loadState instanceof LoadState.Loading ? View.VISIBLE : View.GONE);
+            mRetry.setVisibility(loadState instanceof LoadState.Error ? View.VISIBLE : View.GONE);
+            mRetry.setOnClickListener(retryCallback);
+            mErrorMsg.setVisibility(loadState instanceof LoadState.Error ? View.VISIBLE : View.GONE);
         }
     }
 }

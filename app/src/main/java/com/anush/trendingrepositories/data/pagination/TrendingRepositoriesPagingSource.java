@@ -1,4 +1,4 @@
-package com.anush.trendingrepositories.ui.trendingrepositories;
+package com.anush.trendingrepositories.data.pagination;
 
 import static com.anush.trendingrepositories.data.remote.RemoteDataSourceImpl.NETWORK_PAGE_SIZE;
 
@@ -41,11 +41,10 @@ public class TrendingRepositoriesPagingSource extends RxPagingSource<Integer, Re
             nextPageNumber = 1;
         }
 
-        Single<LoadResult<Integer, Repository>> loadResultSingle = mBackend.getRepositories(mQuery, nextPageNumber)
+        return mBackend.getRepositories(mQuery, nextPageNumber)
                 .subscribeOn(Schedulers.io())
                 .map(response -> toLoadResult(response, params))
                 .onErrorReturn(LoadResult.Error::new);
-        return loadResultSingle;
     }
 
     private LoadResult<Integer, Repository> toLoadResult(@NonNull RepositoriesResponse response, LoadParams<Integer> params) {

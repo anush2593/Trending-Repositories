@@ -72,11 +72,6 @@ dependencies {
     implementation "androidx.paging:paging-rxjava3:$paging_version"
 
     def auto_dispose_version = "2.1.1"
-    implementation "com.uber.autodispose2:autodispose:$auto_dispose_version"
-    implementation "com.uber.autodispose2:autodispose:$auto_dispose_version"
-    implementation "com.uber.autodispose2:autodispose-android:$auto_dispose_version"
-
-//    implementation 'com.uber.autodispose:autodispose-rxlifecycle3:1.4.0'
     implementation "com.uber.autodispose2:autodispose-androidx-lifecycle:$auto_dispose_version"
 
 

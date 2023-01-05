@@ -20,7 +20,7 @@ public class TrendingRepositoriesInterceptor implements Interceptor {
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer " + "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") // uncomment this line and replace "token"
+//                .addHeader("Authorization", "Bearer " + "token") // uncomment this line and replace "token"
                 .build();
         return chain.proceed(request);
     }
